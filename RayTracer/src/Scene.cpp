@@ -10,39 +10,52 @@ Scene::~Scene()
 
 }
 
-Color Scene::render(const Ray& r)
+bool Scene::intersect(const Ray& r, Hit& rec)
 {
-	auto skyColor = [](const Vec3& dir)
-	{
-		Vec3 topCol(0.1, 0.1, 0.4);
-		Vec3 horizonCol = 0.56 * Vec3(0.4, 0.6, 0.8);
-		return 0.3 * mix<Color>(horizonCol, topCol, clamp(dir.z(), 0., 1.));
-	};
-
-	Color out = skyColor(r.dir());
 	double tmin = 0., tmax = INF;
-	Hit rec, trec;
-	Material mat;
-	Pt3 lightPos(1., 1., 0.);
-	Color lightColor(10.);
-
+	Hit trec;
 	for (const auto& object : m_objects)
 	{
 		if (object->hit(r, tmin, tmax, trec))
 		{
 			rec = trec;
-			tmax = rec.t;
-			mat = object->getMaterial();
+			rec.mat = object->getMaterial();
+			tmax = trec.t;
 		}
 	}
 
-	if (tmax < INF)
-		out = Lighting::sampleLight(rec.pt, rec.normal, -r.dir(), lightPos, lightColor, mat);
+	return tmax < INF;
+}
+
+Color Scene::render(const Ray& r)
+{
+	auto skyColor = [](const Vec3& dir)
+	{
+		Color topCol(0.1, 0.1, 0.4);
+		Color horizonCol = 0.56 * Color(0.4, 0.6, 0.8);
+		return 0.3 * mix<Color>(horizonCol, topCol, clamp(dir.z(), 0., 1.));
+	};
+	
+	Hit rec;
+	Color out;
+	if (intersect(r, rec))
+	{
+		for (const auto& light : m_lights)
+			out += Lighting::sampleLight(rec.pt, rec.normal, -r.dir(), light->position, light->color, rec.mat);
+		out /= nbLights();
+	}
+	else
+		out = skyColor(r.dir());
 
 	return out;
 }
 
-void Scene::add(Ref<Shape> object)
+void Scene::addObject(Ref<Shape> object)
 {
 	m_objects.push_back(object);
+}
+
+void Scene::addLight(Ref<Light> object)
+{
+	m_lights.push_back(object);
 }

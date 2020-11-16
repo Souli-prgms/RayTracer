@@ -29,6 +29,8 @@ namespace Lighting
 		double ooToLightLength = 1. / toLightLength;
 		dnl *= ooToLightLength;
 		Vec3 toLightN = toLight * ooToLightLength;
+
+		
 		
 		Vec3 hvec = normalize(toLightN + toEye);
 		Vec3 f0(0.005);

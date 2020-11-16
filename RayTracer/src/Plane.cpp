@@ -1,18 +1,18 @@
 #include "Plane.h"
 
 bool Plane::hit(const Ray& r, double tmin, double tmax, Hit& rec) const
-{
-	if (r.dir().z() * r.origin().z() >= 0.)
-		return false;
-
-	double alpha = -r.origin().z() / r.dir().z();
-	if (tmin < alpha < tmax)
+{	
+	double denom = dot(m_normal, r.dir());
+	if (abs(denom) > 1e-6)
 	{
-		rec.t = alpha;
-		rec.pt = r.at(alpha);
-		rec.normal = Vec3(0, 0, 1);
-		return true;
+		double alpha = dot(m_point - r.origin(), m_normal) / denom;
+		if (alpha > tmin && alpha < tmax)
+		{
+			rec.t = alpha;
+			rec.pt = r.at(rec.t);
+			rec.normal = m_normal;
+			return true;
+		}
 	}
-
 	return false;
 }

@@ -11,7 +11,7 @@ bool Sphere::hit(const Ray& r, double tmin, double tmax, Hit& rec) const
 	if (disc >= 0.)
 	{
 		double alpha = (-b - sqrt(disc)) / (2. * a);
-		if (tmin < alpha < tmax) 
+		if (alpha > tmin && alpha < tmax)
 		{
 			rec.t = alpha;
 			rec.pt = r.at(alpha);
