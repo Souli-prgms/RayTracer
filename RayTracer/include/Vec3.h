@@ -52,6 +52,10 @@ public:
 		*this /= length();
 	}
 
+	double mean() const
+	{
+		return (e[0] + e[1] + e[2]) / 3.;
+	}
 
 private:
 	double e[3];
@@ -128,4 +132,9 @@ inline Vec3 cross(const Vec3& u, const Vec3& v)
 inline Vec3 normalize(const Vec3& v)
 {
 	return v / v.length();
+}
+
+inline Vec3 reflect(const Vec3& i, const Vec3& n)
+{
+	return i - 2. * dot(n, i) * n;
 }

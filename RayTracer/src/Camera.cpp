@@ -9,5 +9,5 @@ Camera::Camera(Pt3 origin, double viewportWidth, double viewportHeight, double f
 
 Ray Camera::constructRay(double u, double v)
 {
-	return Ray(m_origin, m_lowerLeftCorner + u * m_horizontal + v * m_vertical - m_origin);
+	return Ray(m_origin, m_lowerLeftCorner + u * m_horizontal + v * m_vertical - m_origin, 0);
 }

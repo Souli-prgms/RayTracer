@@ -29,9 +29,6 @@ namespace Lighting
 		double ooToLightLength = 1. / toLightLength;
 		dnl *= ooToLightLength;
 		Vec3 toLightN = toLight * ooToLightLength;
-
-		
-		
 		Vec3 hvec = normalize(toLightN + toEye);
 		Vec3 f0(0.005);
 		Vec3 fresnel = fresnelApproximation(toEye, hvec, f0);
@@ -44,5 +41,11 @@ namespace Lighting
 		diffuseContrib = (1. / PI) * (1. - fresnel) * mat.diffuse;
 		contrib = lightColor * (specularContrib + diffuseContrib) * (dnl * ooToLightLength * ooToLightLength);
 		return contrib;
+	}
+
+	Color unreal(const Color& color)
+	{
+		auto multiplication = [](double x) { return x / (x + 0.155) * 1.019; };
+		return Color(multiplication(color.x()), multiplication(color.y()), multiplication(color.z()));
 	}
 }

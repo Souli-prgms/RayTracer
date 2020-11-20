@@ -13,7 +13,7 @@ Scene::~Scene()
 bool Scene::intersect(const Ray& r, Hit& rec)
 {
 	double tmin = 0., tmax = INF;
-	Hit trec;
+	Hit trec; rec.t = tmax;
 	for (const auto& object : m_objects)
 	{
 		if (object->hit(r, tmin, tmax, trec))
