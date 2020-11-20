@@ -12,7 +12,7 @@ public:
 
 	void exportAsPPM(const std::string& filename);
 
-	void setPixel(int i, int j, const Color& pixelColor);
+	void setPixel(int i, int j, const Color& pixelColor, int spp);
 
 private:
 	int m_width, m_height;

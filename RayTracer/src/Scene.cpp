@@ -27,27 +27,11 @@ bool Scene::intersect(const Ray& r, Hit& rec)
 	return tmax < INF;
 }
 
-Color Scene::render(const Ray& r)
+Color Scene::backgroundColor(const Vec3& dir) const
 {
-	auto skyColor = [](const Vec3& dir)
-	{
-		Color topCol(0.1, 0.1, 0.4);
-		Color horizonCol = 0.56 * Color(0.4, 0.6, 0.8);
-		return 0.3 * mix<Color>(horizonCol, topCol, clamp(dir.z(), 0., 1.));
-	};
-	
-	Hit rec;
-	Color out;
-	if (intersect(r, rec))
-	{
-		for (const auto& light : m_lights)
-			out += Lighting::sampleLight(rec.pt, rec.normal, -r.dir(), light->position, light->color, rec.mat);
-		out /= nbLights();
-	}
-	else
-		out = skyColor(r.dir());
-
-	return out;
+	Color topCol(0.1, 0.1, 0.4);
+	Color horizonCol = 0.56 * Color(0.4, 0.6, 0.8);
+	return 0.3 * mix<Color>(horizonCol, topCol, clamp(dir.z(), 0., 1.));
 }
 
 void Scene::addObject(Ref<Shape> object)

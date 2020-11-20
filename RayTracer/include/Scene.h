@@ -4,20 +4,24 @@
 #include "Lighting.h"
 #include "Shape.h"
 
+typedef std::vector<Ref<Light>> LightList;
+typedef std::vector<Ref<Shape>> ShapeList;
+
 class Scene
 {
 public:
 	Scene();
 	~Scene();
 
-	Color render(const Ray& r);
 	void addObject(Ref<Shape> object);
 	void addLight(Ref<Light> light);
 	int nbLights() const { return m_lights.size(); }
+	bool intersect(const Ray& r, Hit& rec);
+	Color backgroundColor(const Vec3& dir) const;
+	const LightList& getLightList() const { return m_lights; }
+	const ShapeList& getShapeList() const { return m_objects; }
 
 private:
-	bool intersect(const Ray& r, Hit& rec);
-
-	std::vector<Ref<Shape>> m_objects;
-	std::vector<Ref<Light>> m_lights;
+	ShapeList m_objects;
+	LightList m_lights;
 };

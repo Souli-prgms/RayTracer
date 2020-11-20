@@ -2,8 +2,8 @@
 
 int main()
 {
-	const int width = 1280, height = 720;
-	Scope<Application> app = createScope<Application>(width, height);
+	const int width = 1280, height = 720, samplesPerPixel = 10;
+	Scope<Application> app = createScope<Application>(width, height, 10);
 	
 	// Scene
 	Ref<Scene> scene = app->getScene();
